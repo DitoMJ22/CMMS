@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sitemanifest>
+  <IisApp path="C:\Users\ditom\Documents\1. KULIAH\1.Semester Lalu\Semester 3\CMMS\CMMS\CMMS\obj\Release\Package\PackageTmp" />
+  <setAcl path="C:\Users\ditom\Documents\1. KULIAH\1.Semester Lalu\Semester 3\CMMS\CMMS\CMMS\obj\Release\Package\PackageTmp" setAclResourceType="Directory" />
+  <setAcl path="C:\Users\ditom\Documents\1. KULIAH\1.Semester Lalu\Semester 3\CMMS\CMMS\CMMS\obj\Release\Package\PackageTmp" setAclUser="anonymousAuthenticationUser" setAclResourceType="Directory" />
+</sitemanifest>

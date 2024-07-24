@@ -1,0 +1,88 @@
+﻿@model CMMS.Models.MaintenancePreventiveModel
+@using CMMS.Models
+@using System.Globalization
+
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Machine _machine = new Machine();
+    Sparepart _sparepart = new Sparepart();
+    MaintenancePreventive _maintenancePreventive = new MaintenancePreventive();
+
+
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Maintenance</a></li>
+        <li class="breadcrumb-item" aria-current="page">Preventive</li>
+        <li class="breadcrumb-item active" aria-current="page">Detail MyPreventive</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link " href="@Url.Action("MyPreventiveDetail", "MaintenancePreventive", new {id = _maintenancePreventive.getWorkOrderID(Model.id_wop) })">Detail</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="@Url.Action("MyPreventiveSparepart", "MaintenancePreventive", new {id = _maintenancePreventive.getWorkOrderID(Model.id_wop) })">Sparepart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("MyPreventiveEvidence", "MaintenancePreventive", new {id = _maintenancePreventive.getWorkOrderID(Model.id_wop) })">Evidence</a>
+                    </li>
+                </ul>
+                <div class="d-flex justify-content-between mt-4" style="height:20px">
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.id_wop)</b></h6>
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.status)</b></h6>
+                </div>
+
+                <hr />
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                    Add Photos
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Photos Evidence</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            @using (Html.BeginForm("ActionCreatePhotowop", "MaintenancePreventive", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="modal-body">
+                                    <div class="form-group col-12">
+                                        <label class="col-form-label">Photos</label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend text-center">
+                                                <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-cash-register"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.id_wop, new { htmlAttributes = new { @type = "hidden" } })
+                                            <span class="input-group-append">
+                                                <button class="file-upload-browse btn btn-primary" type="button">Select</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <input type="submit" value="Upload" class="btn btn-primary" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

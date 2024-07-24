@@ -1,0 +1,67 @@
+﻿@model IEnumerable<CMMS.Models.SparepartModel>
+@using System.Globalization
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/shared/LayoutPage.cshtml";
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("KepalaMaintenance", "Dashboard")">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("SparepartView", "Sparepart")">Sparepart</a></li>
+        <li class="breadcrumb-item active" aria-current="page">View</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Data Sparepart</h6>
+                <a href="@Url.Action("Create", "Sparepart")" class="btn btn-info text-light" style="width:160px;height:35px;"><i class="fa fa-plus"></i> Add Sparepart</a>
+                <div class="table-responsive my-3">
+                    <table id="dataTableExample" class="table table-sm ">
+                        <thead class="thead-light">
+                            <tr class="text-center">
+                                <th scope="col" class="text-left" style="width:35px;">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Function</th>
+                                <th scope="col">Stock</th>
+                                <th scope="col">Unit</th>
+                                <th scope="col">Price</th>
+                                <th scope="col" style="width: 100px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 0;}
+                            @foreach (var item in Model)
+                            {
+                                i++;
+                            <tr>
+                                <th scope="row">@i</th>
+                                <td>@item.name</td>
+                                <td>@item.function</td>
+                                <td>@item.Stock</td>
+                                <td>@item.unit</td>
+                                @{ int price = Convert.ToInt32(item.price.Substring(0, item.price.IndexOf(",")));}
+                                <td>@string.Format(CultureInfo.GetCultureInfo("id-ID"), "{0:C2}", price)</td>
+                                <td>
+                                    <a href="@Url.Action("Detail", "Sparepart", new { id = item.id })" class="btn btn-secondary" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Detail Data">
+                                        <i class="fa fa-info-circle"></i>
+                                    </a>
+                                    <a href="@Url.Action("Update", "Sparepart", new { id = item.id })" class="btn btn-success" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Edit Data">
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </a>
+                                    <a href="@Url.Action("Delete", "Sparepart", new { id = item.id })" class="btn btn-danger" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Delete Data">
+                                        <i class="fa fa-trash-o"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

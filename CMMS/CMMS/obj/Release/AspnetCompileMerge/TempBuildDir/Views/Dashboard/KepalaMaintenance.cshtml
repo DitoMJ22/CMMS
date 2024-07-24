@@ -1,0 +1,366 @@
+﻿@using CMMS.Models
+@using System.Globalization
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Report _report = new Report();
+}
+
+<div class="row">
+    <div class="col-12 col-xl-12 stretch-card">
+        <div class="row flex-grow-1">
+            <div class="col-md-3 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <h6 class="card-title mb-0">Plotting Maintenance</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-12 col-xl-5">
+                                <div class="d-flex align-items-baseline mt-4">
+                                    <h1 class="text-success">
+                                        <span>@_report.counttotalWO_Plot()</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <h6 class="card-title mb-0">PIC Maintenance</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-12 col-xl-5">
+                                <div class="d-flex align-items-baseline mt-4">
+                                    <h1 class="text-dark">
+                                        <span>@_report.counttotalWO_Maintenance()</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <h6 class="card-title mb-0">Checking Maintenance</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-12 col-xl-5">
+                                <div class="d-flex align-items-baseline mt-4">
+                                    <h1 class="text-info">
+                                        <span>@_report.counttotalWO_Checking()</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <h6 class="card-title mb-0">Total Machine</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-12 col-xl-5">
+                                <div class="d-flex align-items-baseline mt-4">
+                                    <h1 class="text-primary">
+                                        <span>@_report.counttotalmachine()</span>
+                                    </h1>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-12 col-xl-7">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h3>Maintenance Result</h3>
+                <br />
+                <h4>Sort By Date</h4>
+                <br />
+                <div class="form-group row">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="col-form-label">Start Date</label>
+                            <input id="startDate" name="startDate" value="#" class="form-control " type="date" placeholder="Start Date" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="col-form-label">End Date</label>
+                            <input id="endDate" name="endDate" value="#" class="form-control " type="date" placeholder="End Date" />
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="form-group">
+                            <label class="col-form-label" style="color:white">#</label>
+                            @*<button type="submit" class="form-control" name="filter" value="true">Tampilkan</button>*@
+                            @*<input id="sortButton" name="sortButton" value="Sort" class="form-control btn-primary" type="button" placeholder="Submit" />*@
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="form-group col-5">
+                        <label class="col-form-label">Total Activity</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend text-center">
+                                <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-cog"></i></span>
+                            </div>
+                            <input name="activity" id="activity" value="@string.Format(CultureInfo.GetCultureInfo("id-ID"), "{0:C2}", _report.countAllWO())" class="form-control" readonly />
+                        </div>
+                    </div>
+                    <div class="form-group col-7">
+                        <label class="col-form-label">Total Maintenance Cost</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend text-center">
+                                <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                            </div>
+                            <input name="cost" id="cost" value="RP @string.Format(CultureInfo.GetCultureInfo("id-ID"), "{0:n0}", _report.countAllWO_Cost()),00" class="form-control" readonly />
+                        </div>
+                    </div>
+                </div>
+
+                @* BarChart awal *@
+                <div class="row">
+                    <div class="col-12" style="text-align:center;">
+                        @*<div id="apexBarlaporan"></div>*@
+                        <canvas id="myChart" height="70"></canvas>
+                    </div>
+                </div>
+
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var colors = {
+        primary: "#6571ff",
+        secondary: "#7987a1",
+        success: "#05a34a",
+        info: "#66d1d1",
+        warning: "#fbbc06",
+        danger: "#ff3366",
+        light: "#e9ecef",
+        dark: "#060c17",
+        muted: "#7987a1",
+        gridBorder: "rgba(77, 138, 240, .15)",
+        bodyColor: "#000",
+        cardBg: "#fff"
+    }
+
+    var fontFamily = "'Roboto', Helvetica, sans-serif"
+
+    //Ini untuk Chart Default pertama kali ada
+    $.ajax({
+        url: window.location.origin + '/AJAX/workorder',
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+
+            var label = [];
+            var valueWoc = [];
+            var valueWop = [];
+            var valueWocCost = [];
+            var valueWopCost = [];
+
+            for (var i in data) {
+                label.push(data[i].name);
+                valueWoc.push(data[i].dataWoc);
+                valueWop.push(data[i].dataWop);
+                valueWocCost.push(data[i].dataWocCost);
+                valueWopCost.push(data[i].dataWopCost);
+            }
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: label,
+                    datasets: [{
+                        label: 'WO Corrective',
+                        data: valueWoc,
+                        backgroundColor: '#ff3366',
+                        borderColor: '#ff3366',
+                        borderWidth: 1
+                    }, {
+                        label: 'WO Preventif',
+                        data: valueWop,
+                        backgroundColor: '#6571ff',
+                        borderColor: '#6571ff',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            gridLines: {
+                                display: false
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            fontColor: '#333',
+                            usePointStyle: true,
+                            padding: 20
+                        },
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                                if (label) {
+                                    label += ': Action = ';
+                                }
+                                label += tooltipItem.yLabel;
+                                return label;
+                            }
+                        }
+                    },
+                }
+            });
+        }
+    });
+
+    //Ini Listener ketika Sort tanggalnya berubah
+    document.getElementById("endDate").addEventListener("change", function () {
+        if (document.getElementById("startDate").value === "") {
+            // code yang akan dijalankan saat value input masih default
+        } else {
+            // code yang akan dijalankan saat value input sudah berubah
+            SortDate();
+        }
+    });
+    //Ini Listener ketika Sort tanggalnya berubah
+    document.getElementById("startDate").addEventListener("change", function () {
+        if (document.getElementById("endDate").value === "") {
+            // code yang akan dijalankan saat value input masih default
+        } else {
+            // code yang akan dijalankan saat value input sudah berubah
+            SortDate();
+        }
+    });
+
+    function SortDate() {
+        let endDate = document.getElementById("endDate").value;
+        let startDate = document.getElementById("startDate").value;
+
+        $.ajax({
+            url: window.location.origin + '/AJAX/workorderSort',
+            type: 'POST',
+            data: { endDate: endDate, startDate: startDate },
+            dataType: 'json',
+            success: function (data) {
+
+                //Buat nyari Total Activity Baru
+                $.ajax({
+                    url: window.location.origin + '/AJAX/countAllWOSort_Ctrlr',
+                    type: 'POST',
+                    data: { endDate: endDate, startDate: startDate },
+                    dataType: 'json',
+                    success: function (data) {
+                        document.getElementById("activity").value = data;
+                    }
+                });
+                //Buat nyari Total Cost Baru
+                $.ajax({
+                    url: window.location.origin + '/AJAX/countAllCostSort_Ctrlr',
+                    type: 'POST',
+                    data: { endDate: endDate, startDate: startDate },
+                    dataType: 'json',
+                    success: function (data) {
+                        document.getElementById("cost").value = "Rp " + data + ",00";
+                    }
+                });
+
+                var label = [];
+                var valueWoc = [];
+                var valueWop = [];
+
+                for (var i in data) {
+                    label.push(data[i].name);
+                    valueWoc.push(data[i].dataWoc);
+                    valueWop.push(data[i].dataWop);
+                }
+
+                var myChart = new Chart(document.getElementById('myChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: label,
+                        datasets: [{
+                            label: 'WO Corrective',
+                            data: valueWoc,
+                            backgroundColor: 'rgba(255, 0, 0, 0.75)',
+                            borderColor: 'rgba(255, 0, 0, 0.8)',
+                            borderWidth: 1
+                        }, {
+                            label: 'WO Preventif',
+                            data: valueWop,
+                            backgroundColor: 'rgba(0, 0, 255, 0.75)',
+                            borderColor: 'rgba(0, 0, 255, 0.8)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                fontColor: '#333',
+                                usePointStyle: true,
+                                padding: 20
+                            },
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function (tooltipItem, data) {
+                                    var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    label += tooltipItem.yLabel;
+                                    label += ' (' + data.datasets[tooltipItem.datasetIndex].label + ')';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>

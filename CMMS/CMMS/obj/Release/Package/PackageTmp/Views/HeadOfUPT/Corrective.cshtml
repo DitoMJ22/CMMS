@@ -1,0 +1,89 @@
+﻿@model IEnumerable<CMMS.Models.MaintenanceCorrectiveModel>
+    @using CMMS.Models
+
+    @{
+    Layout = "~/Views/shared/LayoutPage.cshtml";
+    Corrective _workorder = new Corrective();
+
+    }
+
+    <nav class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Work Order</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Corrective</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title">Work Order Corrective</h6>
+                    <div class="table-responsive my-3">
+                        <table id="dataTableExample" class="table table-sm ">
+                            <thead class="thead-light">
+                                <tr class="text-center">
+                                    <th scope="col" class="text-left" style="width:35px;">#</th>
+                                    <th scope="col">No. Work Order</th>
+                                    <th scope="col">Request Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" style="width: 100px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int i = 0;}
+                                @foreach (var item in Model)
+                                {
+                                if (item.status != "Draft")
+                                {
+                                i++;
+                                <tr>
+                                    <th scope="row" class="text-center">@i</th>
+                                    <td>@item.id_woc</td>
+                                    @{ string date = ""; if (item.request_date != "01-01-1753") { date = item.request_date; } }
+                                    <td>@date</td>
+                                    <td>@item.status</td>
+                                    @if (item.status == "Submitted")
+                                    {
+                                    <td>
+                                        <a href="@Url.Action(" DetailCorrective", "HeadOfUPT" , new { id=_workorder.getWorkOrderID(item.id_woc) })" class="btn btn-info text-white" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Detail Data">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                        <a href="@Url.Action(" WOCAccept", "HeadOfUPT" , new { id=_workorder.getWorkOrderID(item.id_woc) })" class="btn btn-success" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Accept">
+                                            <i class="fa fa-check-square-o"></i>
+                                        </a>
+                                        <a href="@Url.Action(" WOCReject", "HeadOfUPT" , new { id=_workorder.getWorkOrderID(item.id_woc) })" class="btn btn-danger" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Reject">
+                                            <i class="fa fa-remove"></i>
+                                        </a>
+                                    </td>
+                                    }
+                                    else
+                                    {
+                                    <td>
+                                        <a href="@Url.Action(" DetailCorrective", "HeadOfUPT" , new { id=_workorder.getWorkOrderID(item.id_woc) })" class="btn btn-info text-white" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Detail">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                    </td>
+                                    }
+                                </tr>
+                                }
+                                }
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function closemodal(value) {
+            $(value).modal('hide');
+        }
+
+        function getdetail(value) {
+
+        }
+    </script>

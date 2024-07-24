@@ -1,0 +1,190 @@
+﻿@model CMMS.Models.MaintenanceCorrectiveModel
+@using CMMS.Models
+@using System.Globalization
+
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Machine _machine = new Machine();
+    Lab _lab = new Lab();
+    User _user = new User();
+    MaintenanceCorrective _maintenanceCorrective = new MaintenanceCorrective();
+
+    string name_machine = _machine.getData(Model.id_machine).name;
+    string maintenance = "";
+    string finish_date = "";
+    string requested = _user.getData(Model.requested_by).name;
+    string scheduled_finish = Convert.ToDateTime(Model.request_date).AddYears(1).ToString("dd-MM-yyyy");
+
+    if (Model.finish_date == "01-01-1753") { finish_date = ""; }
+
+
+    if (Model.maintenance_by.ToString() != "")
+    {
+        maintenance = _user.getData(Model.maintenance_by).name;
+    }
+
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Maintenance</a></li>
+        <li class="breadcrumb-item" aria-current="page">Corrective</li>
+        <li class="breadcrumb-item active" aria-current="page">Detail MyCorrective</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action(" MyCorrectiveDetail", "MaintenanceCorrective" , new {id=_maintenanceCorrective.getWorkOrderID(Model.id_woc) })">Detail</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="@Url.Action(" MyCorrectiveSparepart", "MaintenanceCorrective" , new {id=_maintenanceCorrective.getWorkOrderID(Model.id_woc) })">Sparepart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="@Url.Action(" MyCorrectiveEvidence", "MaintenanceCorrective" , new {id=_maintenanceCorrective.getWorkOrderID(Model.id_woc) })">Evidence</a>
+                    </li>
+                </ul>
+                <div class="d-flex justify-content-between mt-4" style="height:20px">
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.id_woc)</b></h6>
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.status)</b></h6>
+                </div>
+                @using (Html.BeginForm())
+                {
+                @Html.AntiForgeryToken()
+                <div class="form">
+                    <hr />
+                    <h4>Information</h4>
+                    @Html.EditorFor(model => model.id_woc, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                    @Html.EditorFor(model => model.id_machine, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                    @Html.EditorFor(model => model.id_callendar, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                    <div class="form-group row">
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Machine</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="name_machine" id="name_machine" value="@name_machine" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Requested By</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="requested_by" id="requested_by" value="@requested" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Maintenance By</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="maintenance_by" id="maintenance_by" value="@maintenance" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Date</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-3">
+                            <label class="col-form-label">Scheduled Start</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="request_date" id="request_date" value="@Html.ValueFor(model => model.request_date)" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="col-form-label">Scheduled Finish</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input value="@scheduled_finish" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="col-form-label">Actual Start</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="deadline" id="deadline" value="@Html.ValueFor(model => model.deadline)" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="col-form-label">Actual Finish</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="finish_date" id="finish_date" value="@finish_date" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Cost</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-4">
+                            <label class="col-form-label"><span class="text-warning">*Maintenance</span></label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.maintenance_cost, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Sparepart</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="sparepart_cost" id=sparepart_cost value="@string.Format(CultureInfo.GetCultureInfo(" id-ID"), "{0:C2}" , Model.sparepart_cost)" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Total</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="cost" id="cost" value="@string.Format(CultureInfo.GetCultureInfo(" id-ID"), "{0:C2}" , Model.cost)" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Description Maintenance</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Request</label>
+                            <textarea name="description" id="description" class="readonlyeditor">@Model.desc_request</textarea>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label"><span class="text-warning">*Treatment</span></label>
+                            @Html.EditorFor(model => model.desc_maintenance, new { htmlAttributes = new { @class = "form-control", @id = "tinymceExample" } })
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <a href="@Url.Action(" MyCorrective", "MaintenanceCorrective" )" class="btn btn-default" style="width:140px;height:35px;">Back</a>
+                            <input type="submit" value="Update" class="btn btn-primary" style="width:140px;height:35px;" />
+                            <a href="@Url.Action(" MyCorrectiveFinish", "MaintenanceCorrective" ,new {id=_maintenanceCorrective.getWorkOrderID(Model.id_woc) })" class="btn btn-success" style="width:140px;height:35px;">Finish</a>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var value = document.getElementById("description").value
+    tinymce.get("description").setContent(value);
+</script>

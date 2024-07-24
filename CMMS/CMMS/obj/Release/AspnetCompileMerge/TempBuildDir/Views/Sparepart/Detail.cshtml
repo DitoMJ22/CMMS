@@ -1,0 +1,138 @@
+﻿@model CMMS.Models.SparepartModel
+@using CMMS.Models
+@using System.Globalization
+
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Sparepart _sparepart = new Sparepart();
+    List<string> photos = _sparepart.getAll_photoPart(Model.id);
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("KepalaMaintenance", "Dashboard")">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("SparepartView", "Sparepart")">Sparepart</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detail Sparepart</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="container">
+
+                    <h4>Sparepart Information</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-12">
+                            <label class="col-form-label">Name</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-user"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Function</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-cogs"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.function, new { htmlAttributes = new { @class = "form-control", @rows = "6", @col = "6", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Unit</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-calculator"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.unit, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Price</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-credit-card"></i></span>
+                                </div>
+                                @{ int price = Convert.ToInt32(Model.price.Substring(0, Model.price.IndexOf(",")));}
+                                <input type="text" class="form-control" name="Price" id="Price" value="@string.Format(CultureInfo.GetCultureInfo("id-ID"), "{0:C2}", price)" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Sparepart Photo</h4>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                        Add Photos Sparepart
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @using (Html.BeginForm("ActionCreatePhoto", "Sparepart", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="modal-body">
+                                        <div class="form-group col-12">
+                                            <label class="col-form-label">Photos</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend text-center">
+                                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-image"></i></span>
+                                                </div>
+                                                @Html.EditorFor(model => model.id, new { htmlAttributes = new { @type = "hidden" } })
+                                                @Html.TextBoxFor(model => model.photos, "", new { @type = "file", @multiple = "multiple", @class = "form-control file-upload-info" })
+                                                <span class="input-group-append">
+                                                    <button class="file-upload-browse btn btn-primary" type="button">Select</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <input type="submit" value="Upload" class="btn btn-primary" style="width:140px;height:35px;" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @foreach (var item in photos)
+                        {
+                            string id_photo = item.ToString(); //id photo
+                            id_photo = id_photo.Substring(id_photo.LastIndexOf("_") + 1);
+                            id_photo = id_photo.Substring(0, id_photo.IndexOf("."));
+
+                            string id_sparepart = item.ToString(); //id mesin
+                            id_sparepart = id_sparepart.Remove(id_sparepart.IndexOf("_"));
+
+                            <div class="col-4 my-3">
+                                <img src="~/Uploads/Sparepart/@item.ToString()" class="card-img-top" alt="..." style="height:400px;display:block;">
+                                <a href="@Url.Action("DeletePhoto", "Sparepart", new { id_photo = id_photo, id_sparepart = id_sparepart })" class="btn btn-outline-light " style="width: 20px; height: 25px; position: absolute; top: 0; left: 1;">
+                                    <i data-feather="x" style="width: 20px; height: 20px; position: absolute; top: 2px; left:6px;"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group row">
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <a href="@Url.Action("SparepartView", "Sparepart")" class="btn btn-secondary" style="width:140px;height:35px;">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

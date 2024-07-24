@@ -1,0 +1,176 @@
+﻿@model CMMS.Models.MachineModel
+@using CMMS.Models
+
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    IList<SelectListItem> condition = new List<SelectListItem>
+    {
+    new SelectListItem { Value = null, Text = "Choose Condition" },
+    new SelectListItem { Value = "New", Text = "New" },
+    new SelectListItem { Value = "Second", Text = "Second" },
+    };
+    Machine _machine = new Machine();
+    List<string> photos = _machine.getAll_photoMachine(Model.no_asset);
+
+    Lab _lab = new Lab();
+    IList<LabModel> labs = _lab.getAllData();
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("KepalaMaintenance", "Dashboard")">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("MachineView", "Machine")">Machine</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detail Machine</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("Detail", "Machine", new { id = Model.no_asset })">Detail</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="@Url.Action("Sparepart", "Machine", new { id = Model.no_asset })">Sparepart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("History", "Machine", new { id = Model.no_asset })">History</a>
+                    </li>
+                </ul>
+
+                <div class="container">
+                    <h4 class="mt-4">Machine Identification</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Asset Number</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-sticky-note"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.no_asset, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Location Lab</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-flask"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.lab, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Machine Information</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-12">
+                            <label class="col-form-label">Name</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-cog"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Model</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-hashtag"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.model, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Merk</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-copyright"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.merk, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Year</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-calendar"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.year, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Condition</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-wrench"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.condition, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Machine Photo</h4>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                        Add Photos Machine
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Add Photo For Machine</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @using (Html.BeginForm("ActionCreatePhoto", "Machine", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <div class="modal-body">
+                                        <div class="form-group col-12">
+                                            <label class="col-form-label">Photos</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend text-center">
+                                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-cash-register"></i></span>
+                                                </div>
+                                                @Html.EditorFor(model => model.no_asset, new { htmlAttributes = new { @type = "hidden" } })
+                                                @Html.TextBoxFor(model => model.photos, "", new { @type = "file", @multiple = "multiple", @class = "form-control file-upload-info" })
+                                                <span class="input-group-append">
+                                                    <button class="file-upload-browse btn btn-primary" type="button">Select</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <input type="submit" value="Upload" class="btn btn-primary" />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        @foreach (var item in photos)
+                        {
+                            string id_photo = item.ToString(); //id photo
+                            id_photo = id_photo.Substring(id_photo.LastIndexOf("_") + 1);
+                            id_photo = id_photo.Substring(0, id_photo.IndexOf("."));
+
+                            string id_machine = item.ToString(); //id mesin
+                            id_machine = id_machine.Remove(id_machine.IndexOf("_"));
+
+                            <div class="col-4 my-3">
+                                <img src="~/Uploads/Machine/@item.ToString()" class="card-img-top" alt="..." style="height:400px;display:block;">
+                                <a href="@Url.Action("DeletePhoto", "Machine", new { id_photo = id_photo, id_machine = id_machine })" class="btn btn-outline-light " style="width: 20px; height: 25px; position: absolute; top: 0; left: 1;">
+                                    <i data-feather="x" style="width: 20px; height: 20px; position: absolute; top: 2px; left:6px;"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

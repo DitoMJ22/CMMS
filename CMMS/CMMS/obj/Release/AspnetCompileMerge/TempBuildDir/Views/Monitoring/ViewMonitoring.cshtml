@@ -1,0 +1,63 @@
+﻿@model IEnumerable<CMMS.Models.MonitoringModel>
+@using CMMS.Models
+
+@{
+    Layout = "~/Views/shared/LayoutPage.cshtml";
+    Monitoring _listMonitoring = new Monitoring();
+
+    Machine _mch = new Machine();
+    IList<MachineModel> machine = _mch.getAllData();
+
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Monitoring</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Table Monitoring</h6>
+                <div class="table-responsive my-3">
+                    <table id="dataTableExample" class="table table-sm ">
+                        <thead class="thead-light">
+                            <tr class="text-center">
+                                <th scope="col" class="text-left" style="width:35px;">#</th>
+                                <th scope="col">ID Monitoring</th>
+                                <th scope="col">Temperature</th>
+                                <th scope="col">Nama Machine</th>
+                                <th scope="col">Waktu</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 0;}
+                            @foreach (var item in Model)
+                            {
+                                i++;
+                                <tr>
+                                    <th scope="row" class="text-center">@i</th>
+                                    <td>@item.id_monitoring</td>
+                                    <td>@item.temperature</td>
+
+                                    @foreach (var item2 in machine)
+                                    {
+                                        if (item.id_machine == item2.no_asset)
+                                        {
+                                            <td>@item2.name</td>
+                                        }
+                                    }
+                                    <td>@item.nama_sensor</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+﻿@using CMMS.Models
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Report _report = new Report();
+
+    UserAPIModel user = (UserAPIModel)Session["user"];
+    string id_user = user.npk;
+}
+
+<div class="row">
+    <div class="col-12 col-xl-12 stretch-card">
+        <div class="row flex-grow-1">
+            <div class="col-md-3 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <h6 class="card-title mb-0">Workorder Corrective</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-12 col-xl-5">
+                                <div class="d-flex align-items-baseline mt-4">
+                                    <h1 class="text-success">
+                                        <span>@_report.counttotalwocsubmitted()</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <h6 class="card-title mb-0">Workorder Preventif</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-12 col-xl-5">
+                                <div class="d-flex align-items-baseline mt-4">
+                                    <h1 class="text-dark">
+                                        <span>@_report.counttotalwopsubmitted()</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<CMMS.Models.MaintenanceCorrectiveModel>
+@using CMMS.Models
+
+@{
+    /**/
+
+    ViewBag.Title = "Corrective";
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Machine _machine = new Machine();
+    Lab _lab = new Lab();
+    MaintenanceCorrective _maintenanceCorrective = new MaintenanceCorrective();
+}
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">Maintenance</li>
+        <li class="breadcrumb-item active" aria-current="page">Corrective</li>
+    </ol>
+</nav>
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("MyCorrective", "MaintenanceCorrective")">My Maintenance</a>
+                    </li>
+                </ul>
+                <div class="table-responsive my-3">
+                    <table id="dataTableExample" class="table table-sm ">
+                        <thead class="thead-light">
+                            <tr class="text-center">
+                                <th scope="col" class="text-left" style="width:35px;">#</th>
+                                <th scope="col">No. Work Order</th>
+                                <th scope="col">Schedule Date</th>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">Finish Date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col" style="width: 100px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int i = 0;}
+                            @foreach (var item in Model)
+                            {
+                                i++;
+                                <tr>
+                                    <th scope="row" class="text-center">@i</th>
+                                    <td>@item.id_woc</td>
+                                    <td>@item.request_date</td>
+                                    <td>@item.deadline</td>
+                                    @if (item.finish_date == "01-01-1753")
+                                    {
+                                        <td></td>
+                                    }
+                                    else
+                                    {
+                                        <td>@item.finish_date</td>
+                                    }
+                                    <td>@item.status</td>
+                                    <td>
+                                        <a href="@Url.Action("MyCorrectiveDetail", "MaintenanceCorrective", new {id = _maintenanceCorrective.getWorkOrderID(item.id_woc) })" class="btn btn-success" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Submit">
+                                            <i class="fa fa-paper-plane"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

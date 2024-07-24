@@ -1,0 +1,107 @@
+﻿@model CMMS.Models.MaintenanceCorrectiveModel
+@using CMMS.Models
+@using System.Globalization
+
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Machine _machine = new Machine();
+    Sparepart _sparepart = new Sparepart();
+    MaintenanceCorrective _maintenanceCorrective = new MaintenanceCorrective();
+
+    List<string>
+    photos = _maintenanceCorrective.getAll_photoCorrective(_maintenanceCorrective.getWorkOrderID(Model.id_woc));
+
+    }
+
+    <nav class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Maintenance</a></li>
+            <li class="breadcrumb-item" aria-current="page">Corrective</li>
+            <li class="breadcrumb-item active" aria-current="page">Detail MyCorrective</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link " href="@Url.Action(" MyCorrectiveDetail", "MaintenanceCorrective" , new {id=_maintenanceCorrective.getWorkOrderID(Model.id_woc) })">Detail</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="@Url.Action(" MyCorrectiveSparepart", "MaintenanceCorrective" , new {id=_maintenanceCorrective.getWorkOrderID(Model.id_woc) })">Sparepart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="@Url.Action(" MyCorrectiveEvidence", "MaintenanceCorrective" , new {id=_maintenanceCorrective.getWorkOrderID(Model.id_woc) })">Evidence</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex justify-content-between mt-4" style="height:20px">
+                        <h6 class="card-title"><b>@Html.ValueFor(model => model.id_woc)</b></h6>
+                        <h6 class="card-title"><b>@Html.ValueFor(model => model.status)</b></h6>
+                    </div>
+
+                    <hr />
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                        Add Photos
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Photos Evidence</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                @using (Html.BeginForm("ActionCreatePhotoWOC", "MaintenanceCorrective", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                {
+                                @Html.AntiForgeryToken()
+                                <div class="modal-body">
+                                    <div class="form-group col-12">
+                                        <label class="col-form-label">Photos</label>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend text-center">
+                                                <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-cash-register"></i></span>
+                                            </div>
+                                            @Html.EditorFor(model => model.id_woc, new { htmlAttributes = new { @type = "hidden" } })
+                                            @Html.TextBoxFor(model => model.photos, "", new { @type = "file", @multiple = "multiple", @class = "form-control file-upload-info" })
+                                            <span class="input-group-append">
+                                                <button class="file-upload-browse btn btn-primary" type="button">Select</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <input type="submit" value="Upload" class="btn btn-primary" />
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        @foreach (var item in photos)
+                        {
+                        string id_photo = item.ToString(); //id photo
+                        id_photo = id_photo.Substring(id_photo.LastIndexOf("_") + 1);
+                        id_photo = id_photo.Substring(0, id_photo.IndexOf("."));
+
+                        string id_woc = item.ToString(); //id mesin
+                        id_woc = id_woc.Remove(id_woc.IndexOf("_"));
+
+                        <div class="col-4 my-3">
+                            <img src="~/Uploads/WOC/@item.ToString()" class="card-img-top" alt="..." style="height:400px;display:block;">
+                            <a href="@Url.Action(" ActionDeletePhotoWOC", "MaintenanceCorrective" , new { id_photo=id_photo, id_woc=id_woc })" class="btn btn-outline-light " style="width: 20px; height: 25px; position: absolute; top: 0; left: 1;">
+                                <i data-feather="x" style="width: 20px; height: 20px; position: absolute; top: 2px; left:6px;"></i>
+                            </a>
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

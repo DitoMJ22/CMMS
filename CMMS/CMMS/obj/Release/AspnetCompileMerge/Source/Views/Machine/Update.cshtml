@@ -1,0 +1,127 @@
+﻿@model CMMS.Models.MachineModel
+@using CMMS.Models
+
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    IList<SelectListItem> condition = new List<SelectListItem>
+    {
+    new SelectListItem { Value = null, Text = "Choose Condition" },
+    new SelectListItem { Value = "New", Text = "New" },
+    new SelectListItem { Value = "Second", Text = "Second" },
+    };
+
+    Lab _lab = new Lab();
+    IList<LabModel> labs = _lab.getAllData();
+    UserAPIModel user = (UserAPIModel)Session["user"];
+}
+
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("KepalaMaintenance", "Dashboard")">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("MachineView", "Machine")">Machine</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Update Machine</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Form Data</h6>
+                <hr />
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form">
+                        <h4>Machine Identification</h4>
+                        <div class="form-group row">
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Asset Number</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-sticky-note"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.no_asset, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.no_asset, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Location Lab</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-flask"></i></span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.lab, new SelectList(labs, "id", "name"))
+
+                                </div>
+                                @Html.ValidationMessageFor(model => model.lab, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <h4>Machine Information</h4>
+                        <div class="form-group row">
+                            <div class="form-group col-12">
+                                <label class="col-form-label">Name</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-cog"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Model</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-hashtag"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.model, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.model, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Merk</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-copyright"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.merk, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.merk, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Year</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.year, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.year, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Condition</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-wrench"></i></span>
+                                    </div>
+                                    @Html.DropDownListFor(model => model.condition, new SelectList(condition, "Value", "Text"))
+                                </div>
+                                @Html.ValidationMessageFor(model => model.condition, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-offset-2 col-md-10">
+                                <a href="@Url.Action("MachineView", "Machine")" class="btn btn-secondary" style="width:140px;height:35px;">Back</a>
+                                <input type="submit" value="Submit" class="btn btn-primary" style="width:140px;height:35px;" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

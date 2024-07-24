@@ -1,0 +1,277 @@
+﻿@using CMMS.Models
+@{
+    if (Session["user"] == null)
+    {
+        TempData["Message"] = "Session Timeout!";
+        Response.Redirect(Url.Action("user", "login"));
+    }
+    UserAPIModel user = (UserAPIModel)Session["user"];
+}
+
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <a href="#" class="sidebar-brand">
+            <img src="~/Content/assets/images/LogoCMMS2.png" style="width:145px; height:30px" />
+        </a>
+        <div class="sidebar-toggler not-active">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    @if (user.jabatan.ToString() == "Kepala Seksi" && user.struktur.ToString() == "Unit Pelayanan Teknis Perawatan")
+    {
+        <div class="sidebar-body">
+            <ul class="nav">
+                <li class="nav-item nav-category">Main</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("KepalaMaintenance", "Dashboard")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="home"></i>
+                            <span class="link-title">Dashboard</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="nav-item nav-category">Master</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("MachineView", "Machine")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="trello"></i>
+                            <span class="link-title">Machine</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("SparepartView", "Sparepart")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="settings"></i>
+                            <span class="link-title">Spare Part</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("LabView", "Lab")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="map-pin"></i>
+                            <span class="link-title">Lab</span>
+                        </div>
+                    </a>
+                </li>
+
+                <!--Bagian Pengerjaan WorkOrder milik Pak Anton-->
+                <li class="nav-item nav-category">Plotting Maintenance</li>
+                <li class="nav-item">
+                    <a href="#" onclick="window.location.href='@Url.Action("Preventive", "AdminPreventive")'" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="calendar"></i>
+                            <span class="link-title">Preventif</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" onclick="window.location.href='@Url.Action("Corrective", "AdminCorrective")'" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="clipboard"></i>
+                            <span class="link-title">Corrective</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item nav-category">PIC Maintenance</li>
+                <li class="nav-item">
+                    <a href="#" onclick="window.location.href='@Url.Action("MyPreventive", "PICMaintenanceAdmin")'" class="nav-link">
+
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="calendar"></i>
+                            <span class="link-title">Preventif</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                        <a href="#" onclick="window.location.href='@Url.Action("MyCorrective", "PICMaintenanceAdmin")'" class="nav-link">
+                            <div class="row mx-0">
+                                <i class="link-icon" data-feather="clipboard"></i>
+                                <span class="link-title">Corrective</span>
+                            </div>
+                        </a>
+                </li>
+                <li class="nav-item nav-category">Checking Maintenance</li>
+                <li class="nav-item">
+                    <a href="#" onclick="window.location.href='@Url.Action("CheckPreventiveAdmin", "CheckPreventiveAdmin")'" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="calendar"></i>
+                            <span class="link-title">Preventif</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" onclick="window.location.href='@Url.Action("CheckCorrectiveAdmin", "CheckCorrectiveAdmin")'" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="clipboard"></i>
+                            <span class="link-title">Corrective</span>
+                        </div>
+                    </a>
+                </li>   
+
+                <li class="nav-item nav-category">Data Maintenance</li>
+                <li class="nav-item">
+                    <a href="#" onclick="window.location.href='@Url.Action("CheckPreventiveAdmin", "DataMaintenance")'" class="nav-link">
+
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="calendar"></i>
+                            <span class="link-title">Preventif</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" onclick="window.location.href='@Url.Action("CheckCorrectiveAdmin", "DataMaintenance")'" class="nav-link">
+                            <div class="row mx-0">
+                                <i class="link-icon" data-feather="clipboard"></i>
+                                <span class="link-title">Corrective</span>
+                            </div>
+                        </a>
+                </li>
+
+            </ul>
+        </div>
+    }
+
+    @if (user.jabatan.ToString() == "Staff" && user.struktur.ToString() == "Unit Pelayanan Teknis Manufaktur")
+    {
+        <div class="sidebar-body">
+            <ul class="nav">
+                <li class="nav-item nav-category">Main</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("PICMaintenanceUPT", "Dashboard")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="home"></i>
+                            <span class="link-title">Dashboard</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="nav-item nav-category">Master</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("MachineView", "Machine")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="trello"></i>
+                            <span class="link-title">Machine</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="nav-item nav-category">Work Order</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("ViewPreventive", "Preventive")" class="nav-link">
+
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="calendar"></i>
+                            <span class="link-title">Preventif</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("ViewCorrective", "Corrective")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="clipboard"></i>
+                            <span class="link-title">Corrective</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="nav-item nav-category">Checking Work Order</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Preventive", "CheckPreventiveUPT")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="calendar"></i>
+                            <span class="link-title">Check Preventif</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Corrective", "CheckCorrectiveUPT")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="clipboard"></i>
+                            <span class="link-title">Check Corrective</span>
+                        </div>
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+    }
+
+    @if (user.jabatan.ToString() == "Kepala Seksi" && user.struktur.ToString() == "Unit Pelayanan Teknis Manufaktur")
+    {
+        <div class="sidebar-body">
+            <ul class="nav">
+                <li class="nav-item nav-category">Main</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("KepalaUPT", "Dashboard")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="home"></i>
+                            <span class="link-title">Dashboard</span>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="nav-item nav-category">Work Order</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Preventive", "HeadOfUPT")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="calendar"></i>
+                            <span class="link-title">Preventif</span>
+                        </div>
+                    </a>
+
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Corrective", "HeadOfUPT")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="clipboard"></i>
+                            <span class="link-title">Corrective</span>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    }
+
+    @if (user.jabatan.ToString() == "Staff" && user.struktur.ToString() == "Unit Pelayanan Teknis Perawatan")
+    {
+        <div class="sidebar-body">
+            <ul class="nav">
+                <li class="nav-item nav-category">Main</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("Maintenance", "Dashboard")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="home"></i>
+                            <span class="link-title">Dashboard</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item nav-category">Work Order</li>
+                <li class="nav-item">
+                    <a href="@Url.Action("MyPreventive", "MaintenancePreventive")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="calendar"></i>
+                            <span class="link-title">Preventif</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="@Url.Action("MyCorrective", "MaintenanceCorrective")" class="nav-link">
+                        <div class="row mx-0">
+                            <i class="link-icon" data-feather="clipboard"></i>
+                            <span class="link-title">Corrective</span>
+                        </div>
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+    }
+</nav>

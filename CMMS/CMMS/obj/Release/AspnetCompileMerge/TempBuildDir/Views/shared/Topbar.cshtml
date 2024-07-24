@@ -1,0 +1,80 @@
+﻿@using CMMS.Models
+@{
+    UserAPIModel user = (UserAPIModel)Session["user"];
+    string id_user = user.npk;
+    Notification notif = new Notification();
+    List<NotificationModel> not = notif.getAllData(id_user);
+}
+
+<nav class="navbar">
+    <a href="#" class="sidebar-toggler">
+        <i data-feather="menu"></i>
+    </a>
+    <div class="navbar-content">
+        <ul class="navbar-nav">
+
+            <li class="nav-item dropdown nav-notifications">
+                <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i data-feather="bell"></i>
+                    <div class="indicator">
+                        <div class="circle"></div>
+                    </div>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="notificationDropdown">
+                    <div class="dropdown-header d-flex align-items-center justify-content-between">
+                        <p class="mb-0 font-weight-medium">New Notifications</p>
+                    </div>
+                    <div class="dropdown-body" style="overflow-y: scroll; max-height: 300px;">
+                        @foreach (var item in not)
+                        {
+                            <a href="javascript:;" class="dropdown-item">
+                                <div class="icon">
+                                    <i data-feather="layers"></i>
+                                </div>
+                                <div class="content">
+                                    <p>@item.title</p>
+                                    <p class="sub-text text-muted">@item.description</p>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                    <div class="dropdown-footer d-flex align-items-center justify-content-center">
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown nav-profile">
+                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img src="~/Content/assets/images/Logo2.jpg" alt="">
+                </a>
+                <div class="dropdown-menu" aria-labelledby="profileDropdown">
+                    <div class="dropdown-header d-flex flex-column align-items-center">
+                        <div class="figure mb-3">
+                            @*<img src="~/Uploads/Akun/@Session["gambar"].ToString()" alt="">*@
+                        </div>
+                        <div class="info text-center">
+                            <p class="name font-weight-bold mb-0">@user.npk</p>
+                            <p class="name text-muted mb-3">@user.nama</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-body">
+                        <ul class="profile-nav p-0 pt-3">
+                            <li class="nav-item">
+                                <a href="../../User/Detail/@user.npk" class="nav-link">
+                                    <i data-feather="user"></i>
+                                    <span>Profile</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("Logout", "Login")" class="nav-link">
+                                    <i data-feather="log-out"></i>
+                                    <span>Log Out</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>

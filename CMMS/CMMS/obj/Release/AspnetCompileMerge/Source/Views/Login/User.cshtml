@@ -1,0 +1,122 @@
+﻿@model CMMS.Models.UserAPIModel
+@{
+    Layout = "~/Views/shared/LayoutLogin.cshtml";
+}
+@using (Html.BeginForm("LoginUser", "Login", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="main-wrapper">
+        <div class="page-wrapper full-page">
+            <div class="page-content d-flex align-items-center justify-content-center">
+                <div class="row w-100 mx-0 auth-page">
+                    <div class="col-md-8 col-xl-6 mx-auto">
+                        <div class="card">
+                            <div class="row" id="card">
+                                <div class="col-md-4 pr-md-0">
+                                    @*<img src="~/Uploads/Public/logo.png" style="width:auto;max-height:452px;"/>*@
+                                </div>
+                                <div class="col-md-8 pl-md-0">
+                                    <div class="auth-form-wrapper px-4 py-5">
+                                        <img class="noble-ui-logo d-block mb-4" src="~/Content/assets/images/LogoCMMS2.png" style="width:145px; height:30px" />
+                                        <h5 class="text-muted  font-weight-normal mb-4">Computer Management Maintenance System</h5>
+                                        @if (TempData["Message"] != null)
+                                        {<h5 class="text-danger  font-weight-normal mb-4">@TempData["Message"]</h5>}
+
+                                    @Html.EditorFor(model => model.result, new { htmlAttributes = new { @class = "form-control", @type = "show" } })
+                                        @Html.EditorFor(model => model.npk, new { htmlAttributes = new { @class = "form-control", @type = "show" } })
+                                        @Html.EditorFor(model => model.nama, new { htmlAttributes = new { @class = "form-control", @type = "show" } })
+                                        @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control", @type = "show" } })
+                                        @Html.EditorFor(model => model.struktur, new { htmlAttributes = new { @class = "form-control", @type = "show" } })
+                                        @Html.EditorFor(model => model.jabatan, new { htmlAttributes = new { @class = "form-control", @type = "show" } })
+                                        @Html.EditorFor(model => model.role, new { htmlAttributes = new { @class = "form-control", @type = "show" } })
+
+                                        @*@Html.EditorFor(model => model.result, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                                        @Html.EditorFor(model => model.npk, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                                        @Html.EditorFor(model => model.nama, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                                        @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                                        @Html.EditorFor(model => model.struktur, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                                        @Html.EditorFor(model => model.jabatan, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                                        @Html.EditorFor(model => model.role, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })*@
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Employees Number</label>
+                                            @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "form-control", @placeholder = "Username" } })
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Password</label>
+                                            <input type="password" class="form-control" placeholder="Password" name="password" id="yourPassword">
+                                        </div>
+                                        <div class="form-group">
+                                            @*<button type="submit" value="Login" class="btn btn-info form-control text-light" id="myButton" /> Login*@
+                                            <button type="submit" value="Login" class="btn btn-info form-control text-light" id="myButton" title="Harap masukan username dan password terlebih dahulu!">Login</button>
+
+                                            @*<input type="submit" value="Login" class="btn btn-info form-control text-light" />*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    document.getElementById("myButton").addEventListener("mouseover", getValue);
+    document.getElementById("myButton").addEventListener("keydown", getValue);
+    document.getElementById("myButton").addEventListener("focus", getValue);    //ketika difokuskan
+    document.getElementById("card").addEventListener("mouseover", getValue);    //ketika mouse bergerak
+    //document.getElementById("username").addEventListener("input", getValue);
+    //document.getElementById("username").addEventListener("keypress", getValue);
+
+    function getValue() {
+        var usernameUser = document.getElementById('username').value;
+        var pass = document.getElementById('yourPassword').value;
+
+        $.ajax({
+            //Nge get access token
+            url: "https://api.polytechnic.astra.ac.id:2906/api_dev/AccessToken/Get",
+            type: "POST",
+            contenttype: "application/x-www-form-urlencoded",
+
+            // parameter access token
+            data: { username: usernameUser, password: pass, grant_type: 'password' },
+            success: function (data) {
+                var url1 = "https://api.polytechnic.astra.ac.id:2906/api_dev/efcc359990d14328fda74beb65088ef9660ca17e/SIA/LoginSIA?username="
+                    + usernameUser + "&password=" + pass;
+                $.ajax({
+                    url: url1,
+                    type: "POST",
+                    headers: {
+                        'Authorization': 'Bearer ' + data["access_token"]
+                    },
+                    contentType: 'application/json',
+
+                    success: function (result) {
+                        document.getElementById("result").value = result["result"];
+                        document.getElementById("npk").value = result["npk"];
+                        document.getElementById("username").value = result["username"];
+                        document.getElementById("nama").value = result["nama"];
+                        //document.getElementById("email").value = result["email"];
+                        document.getElementById("struktur").value = result["struktur"];
+                        document.getElementById("jabatan").value = result["jabatan"];
+                        document.getElementById("role").value = result["role"];
+
+                        document.getElementById("username").value = usernameUser;
+                        document.getElementById('yourPassword').value = pass;
+                        document.getElementById("myButton").disabled = false;
+
+                    },
+                    error: function (error) {
+                        document.getElementById("username").value = usernameUser;
+                        document.getElementById('yourPassword').value = pass;
+                        //document.getElementById("myButton").disabled = true;
+
+                    }
+                });
+            }
+        });
+    }
+
+</script>

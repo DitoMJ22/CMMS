@@ -1,0 +1,134 @@
+﻿@model CMMS.Models.PreventiveModel
+@using CMMS.Models
+@{
+    Layout = "~/Views/shared/LayoutPage.cshtml";
+    User _user = new User();
+    UPT _upt = new UPT();
+    List<UserModel> listUser = _user.getPICMaintenance();
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Work Order</a></li>
+        <li class="breadcrumb-item" aria-current="page">Preventive</li>
+        <li class="breadcrumb-item active" aria-current="page">Create</li>
+    </ol>
+</nav>
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Form Work Order</h6>
+                <div class="d-flex justify-content-between" style="height:20px">
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.id_wop)</b></h6>
+                    @*<h6 class="card-title"><b>@Html.ValueFor(model => model.status)</b></h6>*@
+                </div>
+                <hr />
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form">
+                        <div class="form-group row">
+                            <div class="form-group col-6">
+                                @* BAGIAN DIV INI BAKAL DI HIDE *@
+                                <div id="id_wop_temp" class="form-group col-6">
+                                    @*<label class="col-form-label">Id wop</label>*@
+                                    <div class="input-group mb-3" style="">
+                                        <div class="input-group-prepend text-center">
+                                            <span hidden class="input-group-text icon-align-center" style="width:48px;"><i class="fas fa-hdd"></i></span>
+                                        </div>
+                                        @Html.EditorFor(model => model.id_wop, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly", @type = "hidden"} })
+                                    </div>
+                                    @Html.ValidationMessageFor(model => model.id_wop, "", new { @class = "text-danger" })
+                                </div>
+
+                                @Html.EditorFor(model => model.id_machine, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+
+                                <label class="col-form-label">PIC Maintenace</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.maintenance_by, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                                    <input name="name_pic" id="name_pic" class="form-control" readonly />
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                                        Select
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">PIC</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="table-responsive my-3">
+                                                        <table id="dataTableExample" class="table table-sm ">
+                                                            <thead class="thead-light">
+                                                                <tr class="text-center">
+                                                                    <th scope="col" style="width:10px;">#</th>
+                                                                    <th scope="col">NIK</th>
+                                                                    <th scope="col">Name</th>
+                                                                    <th scope="col">UPT Dikerjakan</th>
+                                                                    <th scope="col">Aksi</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody style="vertical-align:middle">
+                                                                @{ int i = 0;}
+                                                                @foreach (var item in listUser)
+                                                                {
+                                                                    i++;
+                                                                    <tr>
+                                                                        <th scope="row" class="text-center">@i</th>
+                                                                        <td>@item.nik</td>
+                                                                        <td>@item.name</td>
+                                                                        @*<td>@item.maintenance_by</td>*@
+                                                                        <td class="text-center">
+                                                                            <button type="button" onclick="sendvalue(this.value)" class="btn btn-success" style="width:80px;height:35px;" value="@item.nik-@item.name" data-dismiss="modal">Select</button>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.maintenance_by, "", new { @class = "text-danger" })
+
+                                <label class="col-form-label">Schedule Start</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.start_date, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.start_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-offset-2 col-md-10">
+                                <a href="@Url.Action("Preventive", "AdminPreventive")" class="btn btn-default" style="width:140px;height:35px;">Back</a>
+                                <input type="submit" value="Submit" class="btn btn-primary" style="width:140px;height:35px;" />
+                                @*<a href="@Url.Action("wopPlot", "AdminPreventive")" class="btn btn-success" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="top" title="Accept">*@
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("id_wop_temp").style.display = "none";
+    function sendvalue(value) {
+        var explode = value.split("-");
+        document.getElementById("maintenance_by").value = explode[0];
+        document.getElementById("name_pic").value = explode[1];
+    }
+</script>

@@ -1,0 +1,1707 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Informatika</title>
+    @Styles.Render("~/Content/css")
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @Scripts.Render("~/Content/js")
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <div class="main-wrapper">
+        @Html.Partial("~/Views/Shared/Navbar.cshtml");
+
+
+        <div class="page-wrapper">
+            @Html.Partial("~/Views/Shared/Topbar.cshtml");
+
+            <div class="page-content">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<script>
+
+    $(function () {
+        $("#year").datepicker({
+            format: "yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            autoclose: true //to close picker once year is selected
+        });
+    });
+
+    //Temp Data User
+    if ("@TempData["Direct"]" == "User")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+            window.location = "/User/View";
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+                window.location = "/User/View";
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Data has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/User/ActionDelete/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Data is not deleted!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+
+
+    if ("@TempData["Direct"]" == "Machine")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+                window.location = "/Machine/MachineView";
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         //konfirmasi delete foto detail machine
+         if ("@TempData["DataPhoto"]" != "" ) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Sparepart Machine has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Machine/ActionDeletePhoto/?id_photo="+"@TempData["DataPhoto"]"+"&id_machine="+"@TempData["DataMachine"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Photo Machine is not deleted!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        //konfirmasi delete  detail sparepart machine
+         if ("@TempData["DataSparepart"]" != "" ) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Photo Machine has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Machine/ActionDeleteSparepart/?id_sparepart="+"@TempData["DataSparepart"]"+"&id_machine="+"@TempData["DataMachine"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Photo Machine is not deleted!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        //Temp Data Machine
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Data has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Machine/ActionDelete/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Data is not deleted!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+
+    if ("@TempData["Direct"]" == "Sparepart")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+                window.location = "/Sparepart/SparepartView";
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         //konfirmasi delete foto detail Sparepart
+         if ("@TempData["DataPhoto"]" != "" ) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Photo Sparepart has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Sparepart/ActionDeletePhoto/?id_photo="+"@TempData["DataPhoto"]"+"&id_sparepart="+"@TempData["DataSparepart"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Photo Sparepart is not deleted!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        //Temp Data Sparepart
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Data has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Sparepart/ActionDelete/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Data is not deleted!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+
+       if ("@TempData["Direct"]" == "Lab")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+            window.location = "/Lab/LabView";
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+                window.location = "/Lab/LabView";
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Data has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Lab/ActionDelete/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Data is not deleted!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+
+    if ("@TempData["Direct"]" == "Preventive")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+            window.location = "/Preventive/ViewPreventive";
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Data has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Preventive/ActionDeletePreventive/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Data is not deleted!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        if ("@TempData["SendValue"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Sending Work Order to Maintenance",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully Sent',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Preventive/ActionSendPreventive/"+"@TempData["SendValue"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order Hasnt Sent!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        if ("@TempData["Reminder"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Reminding Work Order to Maintenance",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been reminded',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Preventive/ActionReminderPreventive/"+"@TempData["Reminder"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasnt reminded!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+    if ("@TempData["Direct"]" == "Corrective")
+    {
+
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+            window.location = "/Corrective/ViewCorrective";
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Data has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Corrective/ActionDeleteCorrective/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Data is not deleted!',
+                        'error'
+                    )
+                }
+            })
+        }
+         if ("@TempData["SendValue"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Sending Work Order to Maintenance",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully Sent',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Corrective/ActionSendCorrective/"+"@TempData["SendValue"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order Hasnt Sent!',
+                        'error'
+                    )
+                }
+            })
+         }
+
+
+                if ("@TempData["Reminder"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Reminding Work Order to Maintenance",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been reminded',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Corrective/ActionReminderCorrective/"+"@TempData["Reminder"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasnt reminded!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+    if ("@TempData["Direct"]" == "MaintenancePrenvetif")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Add this work order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order is yours now!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Maintenance/ActionWOPAddWork/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasnt been added!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        if ("@TempData["Finish"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Finishing Work Order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully finished',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/MaintenanceCorrective/ActionMyPreventifFinish/"+"@TempData["Finish"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t Finished!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+
+        if ("@TempData["Direct"]" == "MaintenanceCorrective")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Add this work order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order is yours now!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Maintenance/ActionWOCAddWork/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Added!',
+                        'error'
+                    )
+                }
+            })
+            }
+
+
+        if ("@TempData["Finish"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Finishing Work Order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully finished',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/MaintenanceCorrective/ActionMyCorrectiveFinish/"+"@TempData["Finish"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t finished!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+            if ("@TempData["Direct"]" == "MaintenancePreventive")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Add this work order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order is yours now!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Maintenance/ActionWOPAddWork/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Added!',
+                        'error'
+                    )
+                }
+            })
+            }
+
+
+        if ("@TempData["Finish"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Finishing Work Order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully finished',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/MaintenancePreventive/ActionMyPreventiveFinish/"+"@TempData["Finish"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t finished!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+    if ("@TempData["Direct"]" == "CheckCorrectiveUPT2") {
+        if ("@TempData["SuccessMessage"]" != "") {
+            swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed", "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Corrective Work Order Finished",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work order finished!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/CheckCorrectiveUPT/ActionWOCReject/" + "@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        if ("@TempData["Finish"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Finishing Work Order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully finished',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/MaintenanceCorrective/ActionMyCorrectiveFinish/" + "@TempData["Finish"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+    }
+
+        if ("@TempData["Direct"]" == "CheckCorrectiveAdmin") {
+        if ("@TempData["SuccessMessage"]" != "") {
+            swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed", "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Corrective Work Order Finished",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work order finished!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/CheckCorrectiveAdmin/ActionWOCAccept/" + "@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+    }
+
+            if ("@TempData["Direct"]" == "CheckPreventiveAdmin") {
+        if ("@TempData["SuccessMessage"]" != "") {
+            swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed", "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Corrective Work Order Finished",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work order finished!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/CheckPreventiveAdmin/ActionWOPAccept/" + "@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+    }
+
+    if ("@TempData["Direct"]" == "CheckCorrectiveAdminReject") {
+        if ("@TempData["SuccessMessage"]" != "") {
+            swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed", "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Corrective Work Order Finished",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work order finished!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/CheckCorrectiveAdmin/ActionWOCReject/" + "@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+    }
+
+
+    if ("@TempData["Direct"]" == "CheckCorrectiveUPT") {
+        if ("@TempData["SuccessMessage"]" != "") {
+            swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed", "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Corrective Work Order Finished",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work order finished!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/CheckCorrectiveUPT/ActionWOCAccept/" + "@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        if ("@TempData["Finish"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Finishing Work Order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully finished',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/MaintenanceCorrective/ActionMyCorrectiveFinish/" + "@TempData["Finish"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+    }
+
+
+
+        if ("@TempData["Direct"]" == "HeadOfUPTCorrective")
+        {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Sending Work Order to Head Of Maintenance",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work order has been forwarded to the Head Of Maintenance!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/HeadOfUPT/ActionWOCAccept/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        if ("@TempData["Finish"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Finishing Work Order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully finished',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/MaintenanceCorrective/ActionMyCorrectiveFinish/"+"@TempData["Finish"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+            if ("@TempData["Direct"]" == "HeadOfUPTPreventive")
+        {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Sending Work Order to Head Of Maintenance",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work order has been forwarded to the Head Of Maintenance!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/HeadOfUPT/ActionWOPAccept/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        if ("@TempData["Finish"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Finishing Work Order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work Order Has been succesfully finished',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/MaintenancePreventive/ActionMyPreventiveFinish/"+"@TempData["Finish"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+    if ("@TempData["Direct"]" == "HeadOfUPTCorrectiveReject") {
+        if ("@TempData["SuccessMessage"]" != "") {
+            swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed", "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Reject this Work Order",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Work order has been Rejected!',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/HeadOfUPT/ActionWOCReject/" + "@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Work Order hasn\'t been Approved!',
+                        'error'
+                    )
+                }
+            })
+        }
+    }
+
+    if ("@TempData["Direct"]" == "AdminPlot")
+    {
+        if ("@TempData["SuccessMessage"]" != "") {
+        swal.fire("Berhasil", "@TempData["SuccessMessage"]", "success").then((value) => {
+            window.location = "/Machine/MachineView";
+        });
+        }
+
+        if ("@TempData["EmptyMessage"]" != "") {
+            swal.fire("Peringatan", "@TempData["EmptyMessage"]", "warning").then((value) => {
+                window.location = "/Machine/MachineView";
+            });
+        }
+
+        if ("@TempData["ErrorMessage"]" != "") {
+            swal.fire("Failed",  "@TempData["ErrorMessage"]", "error").then((value) => {
+            });
+        }
+
+         //konfirmasi delete foto detail machine
+         if ("@TempData["DataPhoto"]" != "" ) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Sparepart Machine has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Machine/ActionDeletePhoto/?id_photo="+"@TempData["DataPhoto"]"+"&id_machine="+"@TempData["DataMachine"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Photo Machine is not deleted!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        //konfirmasi delete  detail sparepart machine
+         if ("@TempData["DataSparepart"]" != "" ) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Photo Machine has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Machine/ActionDeleteSparepart/?id_sparepart="+"@TempData["DataSparepart"]"+"&id_machine="+"@TempData["DataMachine"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Photo Machine is not deleted!',
+                        'error'
+                    )
+                }
+            })
+        }
+
+        //Temp Data Machine
+        if ("@TempData["Data"]" != "") {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success mx-3',
+                    cancelButton: 'btn btn-danger mx-3'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you Sure?',
+                text: "Deleted data cannot be recovered",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sure!',
+                cancelButtonText: 'Not really',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    swalWithBootstrapButtons.fire(
+                        'Success',
+                        'Data has been succesfully deleted',
+                        'success'
+                    ).then((value) => {
+                        window.location = "/Machine/ActionDelete/"+"@TempData["Data"]";
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire(
+                        'Failed',
+                        'Data is not deleted!',
+                        'error'
+                    )
+                }
+            })
+         }
+    }
+
+</script>

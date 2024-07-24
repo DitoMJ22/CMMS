@@ -1,0 +1,94 @@
+﻿@model CMMS.Models.SparepartModel
+
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/shared/LayoutPage.cshtml";
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("KepalaMaintenance", "Dashboard")">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("SparepartView", "Sparepart")">Sparepart</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Update Sparepart</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Form Data</h6>
+                <hr />
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form">
+                        <h4>Sparepart Information</h4>
+                        <div class="form-group row">
+
+                            <div class="form-group col-12">
+                                <label class="col-form-label">Name</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-user"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Function</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-cogs"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.function, new { htmlAttributes = new { @class = "form-control", @rows = "6", @col = "6", @maxlength = "255" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.function, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Unit</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-calculator"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Unit</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-calculator"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.unit, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.unit, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Price</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-credit-card"></i></span>
+                                    </div>
+                                    @*@Html.EditorFor(model => model.price.Replace(",0000",""), new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.EditorFor(model => model.price, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.price, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-offset-2 col-md-10">
+                                <a href="@Url.Action("SparepartView", "Sparepart")" class="btn btn-secondary" style="width:140px;height:35px;">Back</a>
+                                <input type="submit" value="Submit" class="btn btn-primary" style="width:140px;height:35px;" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

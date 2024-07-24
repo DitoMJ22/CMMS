@@ -1,0 +1,105 @@
+﻿@model CMMS.Models.SparepartModel
+@using CMMS.Models
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+}
+
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("KepalaMaintenance", "Dashboard")">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("SparepartView", "Sparepart")">Sparepart</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Create Sparepart</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Form Data</h6>
+                <hr />
+                @using (Html.BeginForm("Create", "Sparepart", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form">
+                        <h4>Sparepart Information</h4>
+
+                        <div class="form-group row">
+                            <div class="form-group col-12">
+                                <label class="col-form-label">Name</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-user"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Function</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-cogs"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.function, new { htmlAttributes = new { @class = "form-control", @rows = "6", @col = "6", @maxlength = "255" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.function, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Stock</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-calculator"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.Stock, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Stock, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Unit</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-calculator"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.unit, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.unit, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="col-form-label">Price</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-credit-card"></i></span>
+                                    </div>
+                                    @Html.EditorFor(model => model.price, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                @Html.ValidationMessageFor(model => model.price, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group col-12">
+                                <label class="col-form-label">Photos</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend text-center">
+                                        <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-image"></i></span>
+                                    </div>
+                                    @Html.TextBoxFor(model => model.photos, "", new { @type = "file", @multiple = "multiple", @class = "form-control file-upload-info" })
+                                    <span class="input-group-append">
+                                        <button class="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-offset-2 col-md-10">
+                                <a href="@Url.Action("SparepartView", "Sparepart")" class="btn btn-secondary" style="width:140px;height:35px;">Back</a>
+                                <input type="submit" value="Submit" class="btn btn-primary" style="width:140px;height:35px;" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

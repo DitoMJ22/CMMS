@@ -1,0 +1,183 @@
+﻿@model CMMS.Models.PreventiveModel
+@using CMMS.Models
+@using System.Globalization
+@{
+    ViewBag.Title = "DetailPreventive";
+    Layout = "~/Views/shared/LayoutPage.cshtml";
+
+    Machine _machine = new Machine();
+    Lab _lab = new Lab();
+    User _user = new User();
+    Sparepart _sparepart = new Sparepart();
+    MaintenancePreventive _maintenancePreventive = new MaintenancePreventive();
+
+    string maintenance = "";
+    string deadline = Model.start_date;
+    string finish_date = Model.finish_date;
+    string requested = _user.getData(Model.requested_by).name;
+    string scheduled_finish = Convert.ToDateTime(Model.schedule_date).AddYears(1).ToString("dd-MM-yyyy");
+
+    if (Model.start_date == "01-01-1753") { deadline = ""; }
+    if (Model.finish_date == "01-01-1753") { finish_date = ""; }
+
+
+    if (Model.maintenance_by.ToString() != "")
+    {
+        maintenance = _user.getData(Model.maintenance_by).name;
+    }
+
+    List<MachineModel> listMachine = _machine.getAllData();
+
+    List<SparepartModel> spareparts = _sparepart.getAll_sparepartWOC(Model.id_wop);
+    List<SparepartModel> spareparts_non = _sparepart.getAll_sparepartWOCExcept(Model.id_wop);
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Work Order</a></li>
+        <li class="breadcrumb-item" aria-current="page">Preventif</li>
+        <li class="breadcrumb-item active" aria-current="page">Detail Preventive</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between" style="height:20px">
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.id_wop)</b></h6>
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.status)</b></h6>
+                </div>
+                <div class="form">
+                    <hr />
+                    <h4>Information</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Machine</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="name_machine" id="name_machine" value="@_machine.getData(Model.id_machine).name" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Requested By</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="requested_by" id="requested_by" value="@requested" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Maintenance By</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="maintenance_by" id="maintenance_by" value="@maintenance" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Date</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Scheduled Start</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="schedule_date" id="schedule_date" value="@Html.ValueFor(model => model.schedule_date)" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Actual Start</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="start_date" id="start_date" value="@deadline" class="form-control" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Actual Finish</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="end_date" id="finish_date" value="@finish_date" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Cost</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-4">
+                            <label class="col-form-label">Maintenance</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                <input name="maintenance_cost" id="maintenance_cost" value="@string.Format(CultureInfo.GetCultureInfo("id-ID"), "{0:C2}", Model.maintenance_cost)" class="form-control" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <h4>Description Maintenance</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Request</label>
+                            <textarea name="description" id="description" class="readonlyeditor">@Model.description</textarea>
+                        </div>
+                        <div class="form-group col-6">
+                            <label class="col-form-label">Treatment</label>
+                            <textarea name="desc_maintenance" id="desc_maintenance" class="readonlyeditor">@Model.desc_maintenance</textarea>
+                        </div>
+                    </div>
+                    <h4>Sparepart Maintenance</h4>
+                    <div class="table-responsive my-3">
+                        <table id="dataTableExample" class="table table-sm ">
+                            <thead class="thead-light">
+                                <tr class="text-center">
+                                    <th scope="col" class="text-left" style="width:35px;">#</th>
+                                    <th scope="col">Sparepart</th>
+                                    <th scope="col">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ int j = 0;}
+                                @foreach (var item in spareparts)
+                                {
+                                    j++;
+                                    <tr>
+                                        <th scope="row">@j</th>
+                                        <td>@item.name</td>
+                                        <td>@item.quantity</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4>Evidence</h4>
+                    <div class="row">
+
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <a href="@Url.Action("Preventive", "CheckPreventiveUPT")" class="btn btn-default" style="width:140px;height:35px;">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var value1 = document.getElementById("description").value
+    tinymce.get("description").setContent(value);
+
+    var value2 = document.getElementById("desc_maintenance").value
+    tinymce.get("desc_maintenance").setContent(value);
+
+

@@ -1,0 +1,204 @@
+﻿@model CMMS.Models.MachineModel
+@using CMMS.Models
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Report _report = new Report();
+
+    UserAPIModel user = (UserAPIModel)Session["user"];
+    string id_user = user.npk;
+
+
+
+    Machine _mch = new Machine();
+    IList<MachineModel> machineDDL = _mch.getAllData();
+
+    List<SelectListItem> MachineItems = new List<SelectListItem>();
+    MachineItems.Add(new SelectListItem { Value = null, Text = "Choose Machine" });
+
+    foreach (var item in MachineItems)
+    {
+        machineDDL.Insert(0, new MachineModel { no_asset = item.Value, name = item.Text });
+    }
+}
+
+<div class="row">
+    <div class="col-12 col-xl-12 stretch-card">
+        <div class="row flex-grow-1">
+            <div class="col-md-3 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <h6 class="card-title mb-0">Corrective</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-12 col-xl-5">
+                                <div class="d-flex align-items-baseline mt-4">
+                                    <h1 class="text-success">
+                                        <span>@_report.counttotalwocuser(id_user)</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-baseline">
+                            <h6 class="card-title mb-0">Preventif</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-12 col-xl-5">
+                                <div class="d-flex align-items-baseline mt-4">
+                                    <h1 class="text-dark">
+                                        <span>@_report.counttotalwopuser(id_user)</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Grafik <span class="text-primary">Monitoring</span></h6>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="col-form-label">Choose Machine</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend text-center">
+                                <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-wrench"></i></span>
+                            </div>
+                            @Html.DropDownListFor(model => model.name, new SelectList(machineDDL, "no_asset", "name"), htmlAttributes: new { id = "machineDDL" })
+                        </div>
+                    </div>
+                    <div class="col-12" style="text-align:center;">
+                        <canvas id="apexBarlaporan"></canvas>
+                    </div>
+                </div>
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    renderChartAll();
+
+    document.getElementById("machineDDL").addEventListener("change", function () {
+        var selectedValue = this.value;
+        var selectedText = this.options[this.selectedIndex].text;
+
+        if (selectedText === "Choose Machine") {
+            // Lakukan tindakan yang diinginkan ketika opsi "Choose Machine" dipilih
+            renderChartAll();
+            console.log("Choose Machine selected");
+        } else {
+            // Lakukan tindakan lain jika opsi lain dipilih
+            renderChart();
+        }
+    });
+
+
+    var fontFamily = "'Roboto', Helvetica, sans-serif"
+    function renderChart() {
+        let no_asset = document.getElementById("machineDDL").value;
+        $.ajax({
+            url: window.location.origin + '/AJAX/ChartSensor',
+            type: 'POST',
+            data: { no_asset: no_asset },
+            dataType: 'json',
+            success: function (data) {
+                var label = [];
+                var value = [];
+
+                for (var i in data) {
+                    label.push(data[i].name);
+                    value.push(data[i].temperature);
+                }
+                const chartData = {
+                    labels: label,
+                    datasets: [
+                        {
+                            label: 'Temperature',
+                            data: value,
+                            borderColor: ['skyblue'],
+                            borderWidth: 4,
+
+                        }
+                    ]
+                }
+                const ctx = document.getElementById("apexBarlaporan").getContext('2d')
+                const config = {
+                    type: 'line',
+                    data: chartData
+                }
+                const chart = new Chart(ctx, config)
+            }
+        });
+    }
+
+    function renderChartAll() {
+        $.ajax({
+            url: window.location.origin + '/AJAX/ChartSensorAll',
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                var datasets = [];
+                var colors = ['red', 'blue', 'green', 'yellow', 'orange', 'purple']; // Warna statis
+
+                data.forEach(function (item, index) {
+                    var dataset = {
+                        label: item.name,
+                        data: item.temperatures,
+                        borderColor: ['skyblue'],
+                        borderWidth: 4
+                    };
+
+                    datasets.push(dataset);
+                });
+
+                const chartData = {
+                    labels: [], // labels dapat dikosongkan jika tidak ada kategori yang spesifik
+                    datasets: datasets
+                };
+
+                const ctx = document.getElementById("apexBarlaporan").getContext('2d');
+                const config = {
+                    type: 'line',
+                    data: chartData,
+                    options: {
+                        scales: {
+                            y: {
+                                min: 0, // Rentang nilai minimum
+                                max: 100, // Rentang nilai maksimum
+                                // Atau gunakan stepSize jika ingin mengatur langkah antar nilai
+                                // stepSize: 10
+                            }
+                        }
+                    }
+                };
+
+                const chart = new Chart(ctx, config);
+            }
+        });
+    }
+
+
+
+    setInterval(() => {
+        var selectedText = document.getElementById("machineDDL").options[document.getElementById("machineDDL").selectedIndex].text;
+        if (selectedText === "Choose Machine") {
+            renderChartAll();
+        } else {
+            renderChart();
+        }
+    }, 2000);
+
+</script>

@@ -1,0 +1,143 @@
+﻿@model CMMS.Models.LabModel
+@using CMMS.Models
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/shared/LayoutPage.cshtml";
+    UPT _upt = new UPT();
+    IList<UPTModel> upts = _upt.getAllData();
+    UserAPIModel user = (UserAPIModel)Session["user"];
+
+    User _user = new User();
+    List<UserModel> listUser = _user.getPICMaintenance();
+
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="@Url.Action("KepalaMaintenance", "Dashboard")">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="@Url.Action("LabView", "Lab")">Sparepart</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Create Lab</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-title">Form Data</h6>
+                <hr />
+                @using (Html.BeginForm(Html.BeginForm("Create", "Lab", FormMethod.Post, new { enctype = "multipart/form-data" })))
+                {
+                    @Html.AntiForgeryToken()
+                <div class="form">
+                    <h4>Lab Information</h4>
+                    <div class="form-group row">
+                        <div class="form-group col-12">
+                            <label class="col-form-label">Name</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-flask"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.name, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group col-6">
+                            <label class="col-form-label">UPT</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-university"></i></span>
+                                </div>
+                                @Html.DropDownListFor(model => model.upt, new SelectList(upts, "id", "name"))
+
+                            </div>
+                            @Html.ValidationMessageFor(model => model.upt, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group col-12">
+                            <label class="col-form-label">PIC Maintenace</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend text-center">
+                                    <span class="input-group-text icon-align-center" style="width:48px;"><i class="fa fa-id-card"></i></span>
+                                </div>
+                                @Html.EditorFor(model => model.pic, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+                                <input name="name_pic" id="name_pic" class="form-control" readonly />
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                                    Select
+                                </button>
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">PIC</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="table-responsive my-3">
+                                                    <table id="dataTableExample" class="table table-sm ">
+                                                        <thead class="thead-light">
+                                                            <tr class="text-center">
+                                                                <th scope="col" style="width:10px;">#</th>
+                                                                <th scope="col">NIK</th>
+                                                                <th scope="col">Name</th>
+                                                                <th scope="col">Phone</th>
+                                                                <th scope="col">Email</th>
+                                                                <th scope="col">UPT</th>
+                                                                <th scope="col">Aksi</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody style="vertical-align:middle">
+                                                            @{ int i = 0;}
+                                                            @foreach (var item in listUser)
+                                                            {
+                                                                i++;
+                                                                <tr>
+                                                                    <th scope="row" class="text-center">@i</th>
+                                                                    <td>@item.nik</td>
+                                                                    <td>@item.name</td>
+                                                                    <td>@item.phone</td>
+                                                                    <td>@item.email</td>
+                                                                    <td>@_upt.getData(item.upt).name</td>
+                                                                    <td class="text-center">
+                                                                        <button type="button" onclick="sendvalue(this.value)" class="btn btn-success" style="width:80px;height:35px;" value="@item.nik-@item.name" data-dismiss="modal">Select</button>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.pic, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-offset-2 col-md-10">
+                            <a href="@Url.Action("LabView", "Lab")" class="btn btn-outline-secondary" style="width:140px;height:35px;"><p style="text-align:center;">Back</p></a>
+                            <input type="submit" value="Submit" class="btn btn-primary" style="width:140px;height:35px;" />
+                        </div>
+                    </div>
+                    }
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendvalue(value) {
+        var explode = value.split("-");
+        document.getElementById("pic").value = explode[0];
+        document.getElementById("name_pic").value = explode[1];
+        //var temp_id = document.getElementById("temp_id").value;
+    }
+</script>

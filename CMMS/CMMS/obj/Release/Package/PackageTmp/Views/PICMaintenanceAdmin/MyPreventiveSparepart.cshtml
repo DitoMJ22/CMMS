@@ -1,0 +1,188 @@
+﻿@model CMMS.Models.MaintenancePreventiveModel
+@using CMMS.Models
+@using System.Globalization
+
+@{
+    Layout = "~/Views/Shared/LayoutPage.cshtml";
+    Machine _machine = new Machine();
+    Sparepart _sparepart = new Sparepart();
+    MaintenancePreventive _maintenancePreventive = new MaintenancePreventive();
+
+    List<SparepartModel> spareparts = _sparepart.getAll_sparepartWOC(Model.id_wop);
+    List<SparepartModel> spareparts_non = _sparepart.getAll_sparepartWOCExcept(Model.id_wop);
+
+}
+
+<nav class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Maintenance</a></li>
+        <li class="breadcrumb-item" aria-current="page">Preventive</li>
+        <li class="breadcrumb-item active" aria-current="page">Detail MyPreventive</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link " href="@Url.Action("MyPreventiveDetail", "PICMaintenanceAdmin", new {id = _maintenancePreventive.getWorkOrderID(Model.id_wop) })">Detail</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="@Url.Action("MyPreventiveSparepart", "PICMaintenanceAdmin", new {id = _maintenancePreventive.getWorkOrderID(Model.id_wop) })">Sparepart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="@Url.Action("MyPreventiveEvidence", "PICMaintenanceAdmin", new {id = _maintenancePreventive.getWorkOrderID(Model.id_wop) })">Evidence</a>
+                    </li>
+                </ul>
+                <div class="d-flex justify-content-between mt-4" style="height:20px">
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.id_wop)</b></h6>
+                    <h6 class="card-title"><b>@Html.ValueFor(model => model.status)</b></h6>
+                </div>
+
+                <hr />
+                <button type="button" class="btn btn-primary my-2" data-toggle="modal" data-target="#firstModalCenter">
+                    Add Sparepart Machine
+                </button>
+                <!-- Modal -->
+                <div class="modal fade" id="firstModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Form Sparepart</h5>
+                                <button type="button" class="close" onclick="closemodal(this.value)" value="#firstModalCenter" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            @using (Html.BeginForm("ActionCreateSparepartWOC", "PICMaintenanceAdmin", FormMethod.Post))
+                            {
+                                <div class="modal-body">
+                                    <div class="form-group row">
+                                        <div class="form-group col-12">
+                                            <label class="col-form-label">Machine</label>
+                                            <input type="hidden" name="id_wop" id="id_wop" value=@Model.id_wop />
+                                            <input type="hidden" name="id_sparepart" id="id_sparepart" />
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend text-center">
+                                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-user"></i></span>
+                                                </div>
+                                                <input type="text" name="name_sparepart" id="name_sparepart" class="form-control" readonly />
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#secondModalCenter">
+                                                    Select Sparepart
+                                                </button>
+                                                <div class="modal fade" id="secondModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLongTitle">List Machine</h5>
+                                                                <button type="button" class="close" onclick="closemodal(this.value)" value="#secondModalCenter" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="container">
+                                                                    <div class="table-responsive my-3">
+                                                                        <table id="dataTableExample" class="table table-sm ">
+                                                                            <thead class="thead-light">
+                                                                                <tr class="text-center">
+                                                                                    <th scope="col" style="width:10px;">#</th>
+                                                                                    <th scope="col">Name</th>
+                                                                                    <th scope="col">Function</th>
+                                                                                    <th scope="col">Unit</th>
+                                                                                    <th scope="col" style="width: 100px;">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody style="vertical-align:middle">
+                                                                                @{ int i = 0;}
+                                                                                @foreach (var item in spareparts_non)
+                                                                                {
+                                                                                    i++;
+                                                                                    <tr>
+                                                                                        <th scope="row" class="text-center">@i</th>
+                                                                                        <td>@item.name</td>
+                                                                                        <td>@item.function</td>
+                                                                                        <td>@item.unit</td>
+                                                                                        <td class="text-center">
+                                                                                            <button type="button" onclick="sendvalue(this.value)" class="btn btn-success" style="width:80px;height:35px;" value="@item.id-@item.name-#secondModalCenter">Select</button>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <label class="col-form-label">Quantity</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend text-center">
+                                                    <span class="input-group-text icon-align-justify" style="width: 48px;"><i class="fa fa-user"></i></span>
+                                                </div>
+                                                <input type="number" name="quantity" id="quantity" class="form-control" min="1" value="1" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" onclick="closemodal(this.value)" value="#firstModalCenter">Close</button>
+                                    <input type="submit" value="Add" class="btn btn-primary" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive my-3">
+                    <table id="dataTableExample" class="table table-sm ">
+                        <thead class="thead-light">
+                            <tr class="text-center">
+                                <th scope="col" class="text-left" style="width:35px;">#</th>
+                                <th scope="col">Sparepart</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Cost</th>
+                                <th scope="col" style="width: 100px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{ int j = 0;}
+                            @foreach (var item in spareparts)
+                            {
+                                j++;
+                                <tr>
+                                    <th scope="row">@j</th>
+                                    <td>@item.name</td>
+                                    <td>@item.quantity</td>
+                                    @{ int price = Convert.ToInt32(item.price.Substring(0, item.price.IndexOf(","))) * Convert.ToInt32(item.quantity);}
+                                    <td>@string.Format(CultureInfo.GetCultureInfo("id-ID"), "{0:C2}", price)</td>
+                                    <td>
+                                        <a href="@Url.Action("ActionDeleteSparepartWOC", "PICMaintenanceAdmin", new { id_sparepart = item.id, id_wop = _maintenancePreventive.getWorkOrderID(Model.id_wop), cost = price})" class="btn btn-danger" style="width:50px;height:35px;" data-toggle="tooltip" data-placement="bottom" title="Delete Data">
+                                            <i class="fa fa-trash-o"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function closemodal(value) {
+        $(value).modal('hide');
+    }
+    function sendvalue(value) {
+        var explode = value.split("-");
+        document.getElementById("id_sparepart").value = explode[0];
+        document.getElementById("name_sparepart").value = explode[1];
+        $(explode[2]).modal('hide');
+    }
+</script>
